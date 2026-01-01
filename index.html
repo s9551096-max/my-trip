@@ -3,35 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Abby's Japan Trip 2026</title>
+    <title>Abby's Travel App | 關西 2026</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
-        body { font-family: 'Noto Sans JP', sans-serif; background-color: #FDFCFB; color: #4A4A4A; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Noto Sans JP', sans-serif; background-color: #FDFCFB; color: #333; -webkit-tap-highlight-color: transparent; }
         .osaka-orange { background-color: #E64A19; }
         .osaka-text { color: #E64A19; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .card-shadow { box-shadow: 0 4px 20px rgba(230, 74, 25, 0.05); }
-        .glass-nav { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); border-top: 1px solid rgba(0,0,0,0.05); }
+        .glass-nav { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-top: 1px solid rgba(0,0,0,0.05); }
         .date-active { background-color: #E64A19; color: white; transform: scale(1.1); box-shadow: 0 4px 10px rgba(230, 74, 25, 0.3); }
+        .flight-card { background: linear-gradient(135deg, #1a1a1a 0%, #333 100%); }
     </style>
 </head>
 <body>
     <div id="app" class="max-w-md mx-auto min-h-screen relative bg-white shadow-2xl overflow-x-hidden">
         
-        <div class="relative h-60 w-full overflow-hidden">
+        <div class="relative h-56 w-full overflow-hidden">
             <img src="https://images.unsplash.com/photo-1545569341-9eb8b30979d9?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-            <div class="absolute bottom-10 left-6 text-white">
-                <h1 class="text-2xl font-bold tracking-widest">關西冬日旅程</h1>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
+            <div class="absolute bottom-10 left-6 text-white text-shadow-sm">
+                <h1 class="text-2xl font-bold tracking-widest text-white">關西冬日旅程</h1>
                 <p class="text-xs opacity-80 mt-1">2026.01.16 - 01.23 | Osaka & Kyoto</p>
             </div>
         </div>
 
         <main class="p-5 pb-32">
             <div v-if="activeTab === 'itinerary'">
+                <div class="bg-orange-50/50 p-4 rounded-3xl border border-orange-100 flex items-center justify-between mb-8 px-5">
+                    <div class="flex items-center space-x-3">
+                        <i data-lucide="cloud-sun" class="w-8 h-8 text-orange-400"></i>
+                        <div><p class="text-lg font-bold text-gray-700">8°C / 2°C</p><p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Weather Forecast</p></div>
+                    </div>
+                </div>
+
                 <div class="flex overflow-x-auto hide-scrollbar space-x-5 mb-8 py-2">
                     <div v-for="(day, idx) in days" :key="idx" @click="selectedDay = idx" class="flex-shrink-0 flex flex-col items-center cursor-pointer">
                         <span :class="['text-[11px] font-bold mb-1', selectedDay === idx ? 'osaka-text' : 'text-gray-300']">{{ day.weekday }}</span>
@@ -42,32 +50,31 @@
                 <div class="space-y-6">
                     <div v-for="(event, eIdx) in itinerary[selectedDay].events" :key="eIdx" class="relative">
                         
-                        <div v-if="event.type === '航班'" class="bg-gray-900 rounded-3xl p-6 text-white shadow-2xl mb-4 overflow-hidden relative">
+                        <div v-if="event.type === '航班'" class="flight-card rounded-3xl p-6 text-white shadow-2xl mb-4 relative overflow-hidden">
                             <div class="flex justify-between items-center relative z-10">
                                 <span class="text-[10px] font-bold tracking-widest text-orange-400 uppercase">{{ event.airline }} {{ event.flightNo }}</span>
-                                <span class="text-[10px] bg-white/10 px-2 py-1 rounded"> Terminal {{ event.terminal }} </span>
+                                <span class="text-[10px] bg-white/10 px-2 py-1 rounded"> T{{ event.terminal }} </span>
                             </div>
                             <div class="flex justify-between items-center mt-6 relative z-10 text-center">
                                 <div class="w-20"><h4 class="text-2xl font-bold">{{ event.depCity }}</h4><p class="text-[10px] opacity-50">{{ event.depTime }}</p></div>
-                                <div class="flex-1 flex flex-col items-center px-2">
-                                    <div class="w-full border-t border-dashed border-white/20 relative"><i data-lucide="plane" class="w-4 h-4 absolute -top-2 left-1/2 -translate-x-1/2 rotate-90 text-orange-500"></i></div>
-                                    <p class="text-[9px] mt-2 opacity-40">{{ event.duration }}</p>
+                                <div class="flex-1 px-2 flex flex-col items-center">
+                                    <div class="w-full border-t border-dashed border-white/20 relative mt-2"><i data-lucide="plane" class="w-4 h-4 absolute -top-2 left-1/2 -translate-x-1/2 rotate-90 text-orange-500"></i></div>
+                                    <p class="text-[9px] mt-3 opacity-40">{{ event.duration }}</p>
                                 </div>
                                 <div class="w-20"><h4 class="text-2xl font-bold">{{ event.arrCity }}</h4><p class="text-[10px] opacity-50">{{ event.arrTime }}</p></div>
                             </div>
-                            <i data-lucide="globe" class="absolute -right-6 -bottom-6 w-32 h-32 opacity-5"></i>
                         </div>
 
                         <div v-else class="bg-white border border-gray-100 rounded-2xl p-4 card-shadow flex flex-col active:bg-gray-50 transition-all" @click="goMap(event.title)">
                             <div class="flex items-start">
-                                <div class="w-1.5 h-1.5 rounded-full osaka-accent mt-2 mr-4 flex-shrink-0"></div>
+                                <div class="w-1.5 h-1.5 rounded-full osaka-orange mt-2 mr-4 flex-shrink-0"></div>
                                 <div class="flex-1">
                                     <div class="flex justify-between items-center mb-1">
                                         <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-orange-50 text-orange-600 uppercase">{{ event.type }}</span>
                                         <span class="text-xs font-bold text-gray-300">{{ event.time }}</span>
                                     </div>
                                     <h3 class="font-bold text-gray-800 text-base leading-tight">{{ event.title }}</h3>
-                                    <p v-if="event.desc" class="text-[11px] text-gray-400 mt-2 leading-relaxed">{{ event.desc }}</p>
+                                    <p v-if="event.desc" class="text-[11px] text-gray-400 mt-2 leading-relaxed" v-html="event.desc"></p>
                                     <div v-if="event.note" class="mt-2 p-2 bg-gray-50 rounded-lg border-l-2 border-orange-200 text-[10px] text-gray-500 italic">💡 {{ event.note }}</div>
                                 </div>
                                 <i data-lucide="chevron-right" class="w-4 h-4 text-gray-200 self-center"></i>
@@ -84,9 +91,9 @@
 
             <div v-if="activeTab === 'expenses'" class="animate-in fade-in">
                 <div class="bg-gray-900 rounded-3xl p-8 text-white mb-8 shadow-2xl relative overflow-hidden">
-                    <p class="text-[10px] opacity-50 font-bold uppercase tracking-widest">旅遊總支出 (JPY)</p>
-                    <h2 class="text-4xl font-bold mt-2">¥ {{ totalExpenses.toLocaleString() }}</h2>
-                    <i data-lucide="banknote" class="absolute -right-4 -bottom-4 w-24 h-24 opacity-5"></i>
+                    <p class="text-[10px] opacity-50 font-bold uppercase tracking-widest text-white">旅遊總支出 (JPY)</p>
+                    <h2 class="text-4xl font-bold mt-2 text-white">¥ {{ totalExpenses.toLocaleString() }}</h2>
+                    <i data-lucide="banknote" class="absolute -right-4 -bottom-4 w-24 h-24 opacity-5 text-white"></i>
                 </div>
                 <div class="space-y-4">
                     <div v-for="exp in expenseList" class="flex justify-between items-center p-4 border-b border-gray-50">
@@ -97,35 +104,35 @@
                         <p class="font-bold text-gray-800">¥{{ exp.amt.toLocaleString() }}</p>
                     </div>
                 </div>
-                <button @click="showModal = true" class="fixed bottom-24 right-8 w-14 h-14 osaka-orange text-white rounded-full shadow-2xl flex items-center justify-center active:scale-90"><i data-lucide="plus" class="w-8 h-8"></i></button>
+                <button @click="showModal = true" class="fixed bottom-24 right-8 w-14 h-14 osaka-orange text-white rounded-full shadow-2xl flex items-center justify-center active:scale-90 text-white"><i data-lucide="plus" class="w-8 h-8"></i></button>
             </div>
 
             <div v-if="activeTab === 'info' || activeTab === 'shopping'" class="py-20 text-center text-gray-300">
-                <i data-lucide="layers" class="w-12 h-12 mx-auto mb-4 opacity-20"></i>
-                <p class="text-sm font-bold">功能整合中</p>
+                <i data-lucide="layers" class="w-12 h-12 mx-auto mb-4 opacity-20 text-gray-200"></i>
+                <p class="text-sm font-bold text-gray-400">資料整合中</p>
             </div>
         </main>
 
-        <nav class="fixed bottom-0 left-0 right-0 glass-nav h-20 flex justify-around items-center px-6 z-50 safe-bottom">
-            <button @click="activeTab = 'itinerary'" :class="['flex flex-col items-center space-y-1', activeTab === 'itinerary' ? 'osaka-text' : 'text-gray-300']"><i data-lucide="map" class="w-6 h-6"></i><span class="text-[10px] font-bold">行程</span></button>
+        <nav class="fixed bottom-0 left-0 right-0 glass-nav h-20 flex justify-around items-center px-6 z-50">
+            <button @click="activeTab = 'itinerary'" :class="['flex flex-col items-center space-y-1', activeTab === 'itinerary' ? 'osaka-text' : 'text-gray-300']"><i data-lucide="map-pin" class="w-6 h-6"></i><span class="text-[10px] font-bold">行程</span></button>
             <button @click="activeTab = 'info'" :class="['flex flex-col items-center space-y-1', activeTab === 'info' ? 'osaka-text' : 'text-gray-300']"><i data-lucide="info" class="w-6 h-6"></i><span class="text-[10px] font-bold">資訊</span></button>
             <button @click="activeTab = 'shopping'" :class="['flex flex-col items-center space-y-1', activeTab === 'shopping' ? 'osaka-text' : 'text-gray-300']"><i data-lucide="shopping-bag" class="w-6 h-6"></i><span class="text-[10px] font-bold">清單</span></button>
             <button @click="activeTab = 'expenses'" :class="['flex flex-col items-center space-y-1', activeTab === 'expenses' ? 'osaka-text' : 'text-gray-300']"><i data-lucide="credit-card" class="w-6 h-6"></i><span class="text-[10px] font-bold">記帳</span></button>
         </nav>
 
-        <div v-if="showModal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 modal-overlay">
+        <div v-if="showModal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 modal-overlay bg-black/40 backdrop-blur-sm">
             <div class="bg-white rounded-[2rem] w-full p-8 shadow-2xl">
                 <h2 class="text-xl font-bold mb-6 osaka-text">新增花費</h2>
                 <div class="space-y-4">
-                    <input v-model="newExp.name" type="text" placeholder="名稱" class="w-full bg-gray-50 p-4 rounded-xl outline-none">
+                    <input v-model="newExp.name" type="text" placeholder="名稱" class="w-full bg-gray-50 p-4 rounded-xl outline-none text-gray-800">
                     <div class="flex space-x-3">
-                        <input v-model.number="newExp.amt" type="number" placeholder="金額 (JPY)" class="w-1/2 bg-gray-50 p-4 rounded-xl outline-none">
-                        <select v-model="newExp.category" class="w-1/2 bg-gray-50 p-4 rounded-xl outline-none">
+                        <input v-model.number="newExp.amt" type="number" placeholder="金額 (JPY)" class="w-1/2 bg-gray-50 p-4 rounded-xl outline-none text-gray-800">
+                        <select v-model="newExp.category" class="w-1/2 bg-gray-50 p-4 rounded-xl outline-none text-gray-800">
                             <option>美食</option><option>交通</option><option>購物</option><option>門票</option>
                         </select>
                     </div>
                 </div>
-                <div class="mt-8 flex space-x-3"><button @click="showModal = false" class="flex-1 p-4 rounded-xl bg-gray-100 font-bold">取消</button><button @click="addExp" class="flex-1 p-4 rounded-xl osaka-orange text-white font-bold">儲存</button></div>
+                <div class="mt-8 flex space-x-3 text-white"><button @click="showModal = false" class="flex-1 p-4 rounded-xl bg-gray-100 font-bold text-gray-800">取消</button><button @click="addExp" class="flex-1 p-4 rounded-xl osaka-orange font-bold text-white">儲存</button></div>
             </div>
         </div>
     </div>
@@ -142,60 +149,64 @@
                     { weekday: 'TUE', date: '20' }, { weekday: 'WED', date: '21' }, { weekday: 'THU', date: '22' }, { weekday: 'FRI', date: '23' }
                 ];
                 const itinerary = ref([
-                    // Day 1
+                    // D1 (1/16)
                     { day: 0, events: [
                         { type: '航班', airline: '長榮航空 (EVA)', flightNo: 'BR178', depCity: 'TPE', depTime: '06:30', arrCity: 'KIX', arrTime: '09:55', duration: '2h 25m', terminal: '2' },
-                        { type: '景點', time: '下午', title: '勝尾寺參拜', desc: '勝利達摩能量點', note: '參拜散策約 1.5–2 小時。第一天調整時差用。' },
+                        { type: '景點', time: '下午', title: '勝尾寺參拜', desc: '勝利達摩能量點，參拜散策。', note: '第一天排不滿，調整時差。' },
                         { type: '美食', time: '晚餐', title: 'ABURIYA 燒肉', desc: '國產牛吃到飽' }
                     ]},
-                    // Day 2
+                    // D2 (1/17)
                     { day: 1, events: [
                         { type: '美食', time: '早上', title: '木津市場', desc: '早餐、逛市場' },
-                        { type: '購物', time: '下午', title: '心齋橋 / 堀江 / 南船場', desc: '潮流品牌選物' },
+                        { type: '購物', time: '下午', title: '心齋橋 / 堀江 / 南船場', desc: '潮流選物、設計品牌' },
                         { type: '美食', time: '下午', title: 'Melt Chocolate', desc: '甜點咖啡' },
                         { type: '購物', time: '下午', title: 'SHRED Osaka', desc: 'TIGHTBOOTH 專門店' },
                         { type: '美食', time: '晚餐', title: '世界一暇なラーメン屋', desc: '高人氣拉麵' }
                     ]},
-                    // Day 3
+                    // D3 (1/18)
                     { day: 2, events: [
-                        { type: '交通', time: '早上', title: '新大阪 → 姬路 (新幹線)', desc: 'JR PASS 啟用第一天', note: '建議班次：08:34 或 08:48 發車' },
-                        { type: '景點', time: '上午', title: '姬路城參觀', desc: '世界文化遺產', note: '含天守閣 2-3 小時' },
-                        { type: '購物', time: '下午', title: '岡山 AEON 夢樂城', desc: '大型購物中心用餐逛街' }
+                        { type: '交通', time: '早上', title: '新大阪 → 姬路 (新幹線)', desc: 'JR PASS 啟用第一天', note: '新幹線單買票券' },
+                        { type: '景點', time: '上午', title: '姬路城參觀', desc: '含天守閣 2-3 小時' },
+                        { type: '購物', time: '下午', title: '岡山 AEON 夢樂城', desc: '逛街用餐' }
                     ]},
-                    // Day 4
-                    { day: 3, events: [{ type: '景點', time: '整天', title: '日本環球影城 USJ', desc: '瑪利歐/哈利波特園區' }]},
-                    // Day 5 (1/20) - 購物點分開
+                    // D4 (1/19)
+                    { day: 3, events: [{ type: '景點', time: '整天', title: '日本環球影城 USJ', desc: '瑪利歐/哈利波特全日活動' }]},
+                    // D5 (1/20) - 購物點獨立
                     { day: 4, events: [
-                        { type: '美食', time: '午餐', title: 'TOKURA 漢堡排', desc: '京都肉汁漢堡排名店' },
-                        { type: '購物', time: '下午', title: 'FREAK’S STORE', desc: '熱門選物服飾' },
-                        { type: '購物', time: '下午', title: 'Graphpaper', desc: '質感設計師品牌' },
-                        { type: '購物', time: '下午', title: 'MOMOTARO JEANS KYOTO', desc: '高品質單寧專門店' },
-                        { type: '美食', time: '下午', title: 'Weekenders Coffee', desc: '職人手沖咖啡' },
+                        { type: '美食', time: '午餐', title: 'TOKURA 漢堡排', desc: '肉汁名店' },
+                        { type: '購物', time: '下午', title: 'FREAK’S STORE', desc: '日式選物服飾' },
+                        { type: '購物', time: '下午', title: 'Graphpaper', desc: '設計師品牌' },
+                        { type: '購物', time: '下午', title: 'MOMOTARO JEANS KYOTO', desc: '高品質丹寧' },
+                        { type: '美食', time: '下午', title: 'Weekenders Coffee', desc: '職人咖啡' },
                         { type: '美食', time: '晚餐', title: '麵屋 豬一', desc: '清甜高湯拉麵' }
                     ]},
-                    // Day 6 (1/21) - 美山時刻表
+                    // D6 (1/21) - 美山時刻表
                     { day: 5, events: [
                         { 
-                            type: '交通', time: '早上', title: '京都 → 園部 → 美山 (交通詳情)', 
-                            desc: '● 10:08 京都發車 -> 10:44 園部<br>● 11:10 日吉站巴士 -> 11:56 美山北',
+                            type: '交通', time: '早上', title: '京都 → 園部 → 美山 (交通)', 
+                            desc: '● 10:08 京都發車 -> 10:44 園部站<br>● 11:10 日吉站巴士 -> 11:56 美山北',
                             links: [
-                                { title: '美山官方交通 Access 頁面', url: 'https://miyamanavi.com/en/information/access-public' },
+                                { title: '美山 Access 查詢', url: 'https://miyamanavi.com/en/information/access-public' },
                                 { title: '2025 英文巴士時刻表 (PDF)', url: 'https://miyamanavi.com/files/user/nantancitybus-timetable-en2025.pdf' }
                             ]
                         },
-                        { type: '景點', time: '下午', title: '美山雪燈廊', desc: '冬日限時點燈活動', note: '※末班巴士：18:22 美山北發車' }
+                        { type: '景點', time: '下午', title: '美山茅草屋之里散策', desc: '傳統建築保存區' },
+                        { type: '景點', time: '晚上', title: '美山冬燈廊點燈', desc: '17:00 點燈活動', note: '※末班巴士：18:22 美山北發車' }
                     ]},
-                    // Day 7
+                    // D7 (1/22) - 京都市區線
                     { day: 6, events: [
-                        { type: '景點', time: '早上', title: '金閣寺', note: '09:00 開門避開人潮' },
-                        { type: '美食', time: '午餐', title: '鳥岩樓親子丼', desc: '午間限定' },
-                        { type: '景點', time: '下午', title: '錦市場 / 河原町散策' },
-                        { type: '美食', time: '晚餐', title: 'MORITAYA 壽喜燒' }
+                        { type: '景點', time: '早上', title: '金閣寺參觀', desc: '建議早點到，避開人潮', note: '映照在湖面的金色閣樓' },
+                        { type: '美食', time: '午餐', title: '鳥岩樓', desc: '親子丼午間限定' },
+                        { type: '購物', time: '下午', title: '錦市場周邊散步、購物', desc: '京都人的廚房' },
+                        { type: '美食', time: '下午', title: 'ASTARTE COFFEE', desc: '手沖精品咖啡' },
+                        { type: '美食', time: '晚餐', title: 'MORITAYA', desc: '壽喜燒老店' }
                     ]},
-                    // Day 8
+                    // D8 (1/23) - 回程
                     { day: 7, events: [
-                        { type: '景點', time: '早上', title: '東福寺參觀' },
-                        { type: '景點', time: '下午', title: '伏見稻荷大社', note: '15:30 往機場移動' },
+                        { type: '景點', time: '早上', title: '東福寺參觀', desc: '欣賞庭園建築' },
+                        { type: '購物', time: '早上', title: '河原町周邊最後逛街', desc: '採購最後伴手禮' },
+                        { type: '美食', time: '午餐', title: 'DRAGON BURGER (東福寺店)', desc: '日式特色漢堡' },
+                        { type: '景點', time: '午後', title: '伏見稻荷大社', desc: '走千本鳥居前段即可 (約 60–90 分鐘)', note: '約 15:00-15:30 往機場移動' },
                         { type: '航班', airline: '全亞航 (AirAsia X)', flightNo: 'D7379', depCity: 'KIX', depTime: '20:45', arrCity: 'TPE', arrTime: '23:05', duration: '3h 20m', terminal: '1' }
                     ]}
                 ]);
