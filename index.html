@@ -3,119 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Japan Trip 2026</title>
+    <title>Japan Trip 2026 | Abby's Travel</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
-        body { 
-            font-family: 'Noto Sans JP', sans-serif; 
-            background-color: #F9FAFB; 
-            color: #374151;
-            -webkit-tap-highlight-color: transparent; 
-        }
-        .osaka-bg { background-color: #E64A19; }
+        body { font-family: 'Noto Sans JP', sans-serif; background-color: #FDFCFB; color: #333; -webkit-tap-highlight-color: transparent; }
+        .osaka-orange { background-color: #E64A19; }
+        .osaka-text { color: #E64A19; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .card-shadow { box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-        /* 防止點擊藍色框框 */
-        * { -webkit-tap-highlight-color: transparent; }
+        .card-shadow { box-shadow: 0 4px 15px rgba(0,0,0,0.04); }
+        .tab-active { color: #E64A19; font-weight: 700; }
+        .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+        .modal-bg { background-color: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
     </style>
 </head>
 <body>
-    <div id="app" class="max-w-md mx-auto min-h-screen pb-24 relative bg-white shadow-xl">
+    <div id="app" class="max-w-md mx-auto min-h-screen relative bg-white shadow-2xl overflow-x-hidden">
         
-        <div class="relative h-52 w-full overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1545569341-9eb8b30979d9?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-            <div class="absolute bottom-12 left-6 text-white">
-                <h1 class="text-2xl font-bold tracking-tight">大阪・京都冬旅</h1>
-                <p class="text-xs opacity-80 mt-1">2026.01.16 - 01.23 (8 Days)</p>
+        <div class="relative h-60 w-full overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1590559899731-a382839e5549?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+            
+            <div class="absolute bottom-16 left-6 text-white">
+                <h1 class="text-2xl font-bold tracking-widest">大阪・京都冬旅</h1>
+                <p class="text-xs opacity-70 mt-1">2026.01.16 - 01.23</p>
             </div>
 
-            <div class="absolute -bottom-1 right-6 flex bg-white p-1.5 rounded-2xl shadow-lg border border-gray-100 space-x-1">
-                <button @click="activeTab = 'itinerary'" :class="['p-3 rounded-xl transition-all', activeTab === 'itinerary' ? 'bg-orange-50 text-orange-600' : 'text-gray-400']">
+            <div class="absolute bottom-4 right-4 flex bg-white/90 backdrop-blur-md p-1.5 rounded-2xl shadow-xl border border-white/20 space-x-1 z-40">
+                <button @click="activeTab = 'itinerary'" :class="['p-3 rounded-xl transition-all', activeTab === 'itinerary' ? 'bg-orange-600 text-white shadow-lg' : 'text-gray-400']">
                     <i data-lucide="map-pin" class="w-5 h-5"></i>
                 </button>
-                <button @click="activeTab = 'info'" :class="['p-3 rounded-xl transition-all', activeTab === 'info' ? 'bg-orange-50 text-orange-600' : 'text-gray-400']">
+                <button @click="activeTab = 'info'" :class="['p-3 rounded-xl transition-all', activeTab === 'info' ? 'bg-orange-600 text-white shadow-lg' : 'text-gray-400']">
                     <i data-lucide="info" class="w-5 h-5"></i>
                 </button>
-                <button @click="activeTab = 'shopping'" :class="['p-3 rounded-xl transition-all', activeTab === 'shopping' ? 'bg-orange-50 text-orange-600' : 'text-gray-400']">
+                <button @click="activeTab = 'shopping'" :class="['p-3 rounded-xl transition-all', activeTab === 'shopping' ? 'bg-orange-600 text-white shadow-lg' : 'text-gray-400']">
                     <i data-lucide="shopping-basket" class="w-5 h-5"></i>
                 </button>
-                <button @click="activeTab = 'expenses'" :class="['p-3 rounded-xl transition-all', activeTab === 'expenses' ? 'bg-orange-50 text-orange-600' : 'text-gray-400']">
+                <button @click="activeTab = 'expenses'" :class="['p-3 rounded-xl transition-all', activeTab === 'expenses' ? 'bg-orange-600 text-white shadow-lg' : 'text-gray-400']">
                     <i data-lucide="banknote" class="w-5 h-5"></i>
                 </button>
             </div>
         </div>
 
-        <main class="p-6">
+        <main class="p-5 pb-24">
             <div v-if="activeTab === 'itinerary'">
-                <div class="flex items-center justify-between mb-6 px-1 bg-blue-50/50 p-4 rounded-2xl">
+                <div class="flex items-center justify-between mb-6 bg-orange-50/50 p-4 rounded-3xl border border-orange-100">
                     <div class="flex items-center space-x-3">
-                        <i data-lucide="cloud-snow" class="w-8 h-8 text-blue-400"></i>
+                        <i data-lucide="cloud-sun" class="w-8 h-8 text-orange-400"></i>
                         <div>
-                            <p class="text-lg font-bold">5°C / 1°C</p>
-                            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Osaka, Japan</p>
+                            <p class="text-lg font-bold">8°C / 2°C</p>
+                            <p class="text-[10px] text-gray-400 font-bold uppercase">Osaka, Japan</p>
                         </div>
                     </div>
-                    <div class="text-right">
-                        <span class="text-[10px] bg-white text-blue-500 px-2 py-1 rounded-full font-bold shadow-sm">體感 0°C</span>
-                    </div>
+                    <span class="text-[10px] font-bold text-orange-600 bg-white px-2 py-1 rounded-full shadow-sm">體感 5°C</span>
                 </div>
 
                 <div class="flex overflow-x-auto hide-scrollbar space-x-6 mb-8 py-2 border-b border-gray-50">
                     <div v-for="(day, idx) in days" :key="idx" @click="selectedDay = idx" class="flex-shrink-0 flex flex-col items-center cursor-pointer">
-                        <span :class="['text-[11px] font-bold mb-1', selectedDay === idx ? 'text-orange-600' : 'text-gray-300']">{{ day.weekday }}</span>
+                        <span :class="['text-[11px] font-bold mb-1 transition-colors', selectedDay === idx ? 'text-orange-600' : 'text-gray-300']">{{ day.weekday }}</span>
                         <span :class="['text-lg font-bold w-10 h-10 flex items-center justify-center rounded-full transition-all', selectedDay === idx ? 'bg-orange-600 text-white shadow-md' : 'text-gray-400']">{{ day.date }}</span>
                     </div>
                 </div>
 
-                <div class="space-y-4">
-                    <div v-for="(element, index) in itinerary[selectedDay].events" :key="index" class="relative">
-                        <div v-if="index > 0" class="ml-4 my-2 border-l-2 border-dashed border-gray-100 pl-8 py-1">
-                            <span class="text-[10px] text-gray-300 font-bold uppercase tracking-widest">Transit</span>
+                <div class="space-y-5">
+                    <div v-for="(event, eIdx) in itinerary[selectedDay].events" :key="eIdx" class="relative">
+                        <div v-if="eIdx > 0" class="ml-4 my-2 border-l-2 border-dashed border-gray-100 pl-8 py-2 flex items-center space-x-2">
+                            <i data-lucide="train" class="w-3 h-3 text-gray-300"></i>
+                            <span class="text-[10px] text-gray-300 font-bold tracking-widest uppercase">Transit Time</span>
                         </div>
 
-                        <div v-if="element.type === '航班'" class="bg-gray-900 rounded-2xl p-5 text-white shadow-xl relative overflow-hidden">
-                            <div class="flex justify-between items-center relative z-10">
-                                <h3 class="text-lg font-bold tracking-tight">{{ element.title }}</h3>
-                                <i data-lucide="plane" class="w-5 h-5 text-orange-500"></i>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-white/10 flex justify-between items-end relative z-10">
-                                <span class="text-2xl font-bold">{{ element.time }}</span>
-                                <span class="text-xs opacity-50 font-medium">{{ element.note }}</span>
-                            </div>
-                            <div class="absolute -right-4 -top-4 opacity-5 text-white"><i data-lucide="plane" class="w-24 h-24"></i></div>
-                        </div>
-
-                        <div v-else class="bg-white border border-gray-100 rounded-2xl p-4 card-shadow flex items-start active:bg-gray-50 transition-colors" @click="openMap(element.title)">
-                            <div class="w-1.5 h-1.5 rounded-full bg-orange-500 mt-2 mr-4 flex-shrink-0"></div>
+                        <div class="bg-white border border-gray-100 rounded-2xl p-4 card-shadow flex items-start active:bg-gray-50 transition-all" @click="goMap(event.title)">
+                            <div class="w-1.5 h-1.5 rounded-full bg-orange-500 mt-2.5 mr-4"></div>
                             <div class="flex-1">
                                 <div class="flex justify-between items-center mb-1">
-                                    <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-orange-50 text-orange-600 uppercase">{{ element.type }}</span>
-                                    <span class="text-xs font-medium text-gray-400">{{ element.time }}</span>
+                                    <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-orange-50 text-orange-600">{{ event.type }}</span>
+                                    <span class="text-xs font-bold text-gray-400">{{ event.time }}</span>
                                 </div>
-                                <h3 class="font-bold text-gray-800 leading-snug">{{ element.title }}</h3>
-                                <p class="text-xs text-gray-500 mt-1 leading-relaxed">{{ element.note }}</p>
+                                <h3 class="font-bold text-gray-800 leading-snug">{{ event.title }}</h3>
+                                <p v-if="event.note" class="text-xs text-gray-400 mt-1 leading-relaxed">{{ event.note }}</p>
                             </div>
-                            <div class="ml-2 self-center text-gray-300">
-                                <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                            </div>
+                            <i data-lucide="chevron-right" class="w-4 h-4 text-gray-200 self-center"></i>
                         </div>
+                    </div>
+                    <div v-if="itinerary[selectedDay].remark" class="mt-6 bg-gray-50 p-4 rounded-2xl border-l-4 border-orange-500">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Note</p>
+                        <p class="text-xs text-gray-600">{{ itinerary[selectedDay].remark }}</p>
                     </div>
                 </div>
             </div>
 
             <div v-if="activeTab === 'info'" class="space-y-6">
                 <div class="bg-orange-50 rounded-3xl p-6 border border-orange-100">
-                    <h3 class="text-xs font-bold text-orange-600 uppercase tracking-widest mb-4">匯率換算 (JPY to TWD)</h3>
+                    <h3 class="text-xs font-bold text-orange-600 uppercase mb-4 tracking-widest">匯率換算</h3>
                     <div class="flex items-center justify-between">
                         <div class="w-1/2">
                             <p class="text-[10px] text-orange-300 font-bold mb-1 uppercase">日幣 JPY</p>
                             <input type="number" v-model="jpy" @input="calcTwd" class="bg-transparent text-2xl font-bold w-full focus:outline-none text-orange-700">
                         </div>
-                        <i data-lucide="repeat" class="text-orange-200 mx-2"></i>
+                        <i data-lucide="arrow-right-left" class="text-orange-200"></i>
                         <div class="w-1/2 text-right">
                             <p class="text-[10px] text-orange-300 font-bold mb-1 uppercase">台幣 TWD</p>
                             <div class="text-2xl font-bold text-orange-700">NT$ {{ twd }}</div>
@@ -123,136 +110,194 @@
                     </div>
                 </div>
                 <div class="space-y-4">
-                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">住宿資訊</h3>
-                    <div v-for="h in hotels" class="p-5 rounded-2xl border border-gray-100 card-shadow">
-                        <h3 class="font-bold text-gray-800">{{ h.name }}</h3>
-                        <p class="text-xs text-gray-400 mt-1 leading-relaxed">{{ h.address }}</p>
-                        <div @click="openMap(h.address)" class="mt-4 text-[10px] font-bold text-orange-600 flex items-center bg-orange-50 w-max px-3 py-1.5 rounded-full">
-                            <i data-lucide="navigation" class="w-3 h-3 mr-1"></i> 打開導航
-                        </div>
+                    <div class="p-5 rounded-2xl border border-gray-100 card-shadow flex justify-between items-center">
+                        <div><h3 class="font-bold">緊急醫療</h3><p class="text-xs text-gray-400">警察 110 / 救護車 119</p></div>
+                        <i data-lucide="phone-call" class="text-red-400"></i>
+                    </div>
+                    <div class="p-5 rounded-2xl border border-gray-100 card-shadow">
+                        <h3 class="font-bold">住宿資訊</h3>
+                        <p class="text-xs text-gray-400 mt-1">1/16-1/20 大阪飯店 | 1/20-1/23 京都河原町</p>
                     </div>
                 </div>
             </div>
 
             <div v-if="activeTab === 'shopping'" class="grid grid-cols-2 gap-4">
-                <div v-for="i in shopping" class="bg-white rounded-2xl overflow-hidden card-shadow border border-gray-50">
-                    <img :src="i.img" class="w-full h-32 object-cover">
-                    <div class="p-3">
-                        <p class="text-xs font-bold text-gray-800">{{ i.name }}</p>
-                    </div>
+                <div v-for="(item, idx) in shopping" :key="idx" class="bg-white rounded-2xl overflow-hidden card-shadow border border-gray-50">
+                    <img :src="item.img" class="w-full h-32 object-cover">
+                    <div class="p-3 text-[11px] font-bold text-gray-700">{{ item.name }}</div>
                 </div>
                 <div class="border-2 border-dashed border-gray-100 rounded-2xl h-44 flex flex-col items-center justify-center text-gray-300">
-                    <i data-lucide="plus" class="w-6 h-6 mb-1"></i>
-                    <span class="text-[10px] font-bold uppercase">Add Item</span>
+                    <i data-lucide="plus" class="w-6 h-6"></i>
+                    <span class="text-[10px] font-bold mt-1">新增照片</span>
                 </div>
             </div>
 
             <div v-if="activeTab === 'expenses'">
                 <div class="bg-gray-900 rounded-3xl p-8 text-white mb-8 shadow-2xl relative overflow-hidden">
-                    <p class="text-[10px] opacity-50 uppercase tracking-widest font-bold">Total Spent (JPY)</p>
-                    <h2 class="text-4xl font-bold mt-2 tracking-tight">¥ 84,200</h2>
+                    <p class="text-[10px] opacity-50 uppercase font-bold tracking-widest">Total Spent (JPY)</p>
+                    <h2 class="text-4xl font-bold mt-2 tracking-tight">¥ {{ totalExpenses.toLocaleString() }}</h2>
+                    <p class="text-[10px] mt-2 opacity-40 italic">約合 NT$ {{ Math.round(totalExpenses * 0.215).toLocaleString() }}</p>
                     <i data-lucide="pie-chart" class="absolute -right-4 -bottom-4 w-24 h-24 opacity-10"></i>
                 </div>
-                <div class="space-y-4 px-1">
-                    <div v-for="e in expenses" class="flex justify-between items-center pb-4 border-b border-gray-50">
+                
+                <div class="space-y-4">
+                    <div v-for="(e, eIdx) in expenseList" :key="eIdx" class="flex justify-between items-center p-4 border-b border-gray-50 transition-all hover:bg-gray-50">
                         <div class="flex items-center">
                             <div class="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center mr-4 text-orange-600">
-                                <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                                <i :data-lucide="getExpenseIcon(e.category)" class="w-5 h-5"></i>
                             </div>
                             <div>
                                 <p class="text-sm font-bold text-gray-800">{{ e.name }}</p>
-                                <p class="text-[10px] text-gray-400 font-medium">1/16 · 現金付款</p>
+                                <p class="text-[10px] text-gray-400 font-bold uppercase">{{ e.category }} · {{ e.pay }}</p>
                             </div>
                         </div>
-                        <div class="text-right">
-                            <p class="font-bold text-gray-700">¥{{ e.amt }}</p>
-                        </div>
+                        <p class="font-bold text-gray-800">¥{{ e.amt.toLocaleString() }}</p>
                     </div>
                 </div>
             </div>
         </main>
 
-        <button class="fixed bottom-8 right-8 w-14 h-14 osaka-bg text-white rounded-full shadow-2xl flex items-center justify-center z-50 active:scale-90 transition-transform">
-            <i data-lucide="plus" class="w-7 h-7"></i>
+        <button v-if="activeTab === 'expenses'" @click="showExpenseModal = true" class="fixed bottom-10 right-8 w-14 h-14 osaka-orange text-white rounded-full shadow-2xl flex items-center justify-center z-50 active:scale-90 transition-transform">
+            <i data-lucide="plus" class="w-8 h-8"></i>
         </button>
+
+        <div v-if="showExpenseModal" class="fixed inset-0 z-[60] flex items-center justify-center p-6 modal-bg">
+            <div class="bg-white rounded-3xl w-full p-6 shadow-2xl">
+                <h2 class="text-xl font-bold mb-6 osaka-text">新增旅遊花費</h2>
+                <div class="space-y-4">
+                    <input v-model="newExp.name" type="text" placeholder="項目名稱" class="w-full bg-gray-50 p-4 rounded-xl focus:outline-none">
+                    <input v-model.number="newExp.amt" type="number" placeholder="金額 (日幣 JPY)" class="w-full bg-gray-50 p-4 rounded-xl focus:outline-none">
+                    <select v-model="newExp.category" class="w-full bg-gray-50 p-4 rounded-xl focus:outline-none">
+                        <option value="美食">美食</option>
+                        <option value="交通">交通</option>
+                        <option value="購物">購物</option>
+                        <option value="住宿">住宿</option>
+                        <option value="景點">景點</option>
+                    </select>
+                </div>
+                <div class="mt-8 flex space-x-3">
+                    <button @click="showExpenseModal = false" class="flex-1 p-4 rounded-xl bg-gray-100 font-bold">取消</button>
+                    <button @click="addExpense" class="flex-1 p-4 rounded-xl osaka-orange text-white font-bold">儲存</button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        const { createApp, ref, onMounted, nextTick, watch } = Vue;
+        const { createApp, ref, computed, onMounted, nextTick, watch } = Vue;
+
         createApp({
             setup() {
                 const activeTab = ref('itinerary');
                 const selectedDay = ref(0);
                 const jpy = ref(1000);
                 const twd = ref(215);
+                const showExpenseModal = ref(false);
+
                 const days = [
-                    { weekday: 'Fri', date: '16' }, { weekday: 'Sat', date: '17' }, { weekday: 'Sun', date: '18' }, { weekday: 'Mon', date: '19' },
-                    { weekday: 'Tue', date: '20' }, { weekday: 'Wed', date: '21' }, { weekday: 'Thu', date: '22' }, { weekday: 'Fri', date: '23' }
+                    { weekday: 'Fri', date: '16' }, { weekday: 'Sat', date: '17' },
+                    { weekday: 'Sun', date: '18' }, { weekday: 'Mon', date: '19' },
+                    { weekday: 'Tue', date: '20' }, { weekday: 'Wed', date: '21' },
+                    { weekday: 'Thu', date: '22' }, { weekday: 'Fri', date: '23' }
                 ];
+
                 const itinerary = ref([
-                    { day: 0, events: [
-                        { type: '航班', title: '關西機場 (KIX)', time: '14:30 抵達', note: '入境取行李、購買周遊券' },
-                        { type: '景點', title: '勝尾寺', time: '16:30', note: '達摩祖師參拜、冬日散策' },
-                        { type: '美食', title: 'ABURIYA 燒肉', time: '19:30', note: '國產牛吃到飽 (道頓堀店)' }
+                    { day: 0, remark: '第一天不排太滿，調整時差用', events: [
+                        { time: '下午', type: '航班', title: '抵達關西機場' },
+                        { time: '下午', type: '景點', title: '市區飯店寄放行李' },
+                        { time: '下午', type: '景點', title: '勝尾寺參拜、散策 (約1.5-2小時)' },
+                        { time: '傍晚', type: '景點', title: '心齋橋、道頓堀散步' },
+                        { time: '晚餐', type: '美食', title: 'ABURIYA 燒肉' }
                     ]},
                     { day: 1, events: [
-                        { type: '美食', title: '木津市場', time: '09:00', note: '海鮮早餐、在地漁貨' },
-                        { type: '購物', title: '堀江 / 南船場', time: '13:00', note: 'SHRED Osaka, 街頭選物' },
-                        { type: '美食', title: '世界一暇なラーメン屋', time: '18:30', note: '黑醬油拉麵推薦' }
+                        { time: '早上', type: '美食', title: '木津市場 (早餐、逛市場)' },
+                        { time: '白天', type: '購物', title: '堀江 (街頭選物)' },
+                        { time: '白天', type: '購物', title: '南船場 (設計品牌集中)' },
+                        { time: '白天', type: '購物', title: '心齋橋補逛' },
+                        { time: '下午', type: '美食', title: 'Melt Chocolate (甜點/咖啡)' },
+                        { time: '下午', type: '購物', title: 'SHRED Osaka (TIGHTBOOTH)' },
+                        { time: '晚餐', type: '美食', title: '世界一暇なラーメン屋' }
                     ]},
                     { day: 2, events: [
-                        { type: '景點', title: '姬路城', time: '10:00', note: '新幹線往返、世界文化遺產' },
-                        { type: '購物', title: '岡山 AEON Mall', time: '15:00', note: '大型購物中心、免稅店' }
+                        { time: '早上', type: '交通', title: '新大阪 → 姬路 (新幹線單買)' },
+                        { time: '上午', type: '景點', title: '姬路城參觀 (含天守，約2-3小時)' },
+                        { time: '下午', type: '交通', title: '姬路 → 岡山' },
+                        { time: '下午', type: '購物', title: '岡山 AEON 夢樂城' },
+                        { time: '晚上', type: '交通', title: '返回大阪休息' }
                     ]},
-                    { day: 3, events: [
-                        { type: '景點', title: '日本環球影城 USJ', time: '08:00', note: '全日暢玩、瑪利歐園區' }
+                    { day: 3, remark: 'JR PASS 第 1 天啟用', events: [
+                        { time: '早上', type: '景點', title: '前往日本環球影城 USJ' },
+                        { time: '整天', type: '景點', title: 'USJ 園區活動' },
+                        { time: '晚上', type: '交通', title: '返回大阪' }
                     ]},
                     { day: 4, events: [
-                        { type: '美食', title: '麺屋 猪一', time: '11:30', note: '京都米其林推薦拉麵' },
-                        { type: '購物', title: '河原町購物區', time: '14:00', note: 'Freak\'s Store, Graphpaper' },
-                        { type: '美食', title: 'Weekenders Coffee', time: '16:00', note: '巷弄職人咖啡' }
+                        { time: '早上', type: '交通', title: '大阪 → 京都 (JR 新快速)' },
+                        { time: '上午', type: '住宿', title: '入住或寄放行李' },
+                        { time: '午餐', type: '美食', title: '麺屋 猪一' },
+                        { time: '下午', type: '購物', title: 'FREAK’S STORE / Graphpaper' },
+                        { time: '下午', type: '購物', title: 'MOMOTARO JEANS KYOTO' },
+                        { time: '下午', type: '美食', title: 'Weekenders Coffee' },
+                        { time: '晚餐', type: '美食', title: 'Tokura 或 麺屋 優光' }
                     ]},
                     { day: 5, events: [
-                        { type: '景點', title: '美山茅草屋之里', time: '14:00', note: '冬日雪景散策' },
-                        { type: '景點', title: '美山冬燈廊', time: '17:30', note: '點燈活動、煙火祭典' }
+                        { time: '早上', type: '交通', title: '京都 → 園部 → 美山 (巴士)' },
+                        { time: '下午', type: '景點', title: '美山茅草屋之里散策' },
+                        { time: '晚上', type: '景點', title: '美山冬燈廊點燈' },
+                        { time: '晚上', type: '交通', title: '返回京都' }
                     ]},
                     { day: 6, events: [
-                        { type: '景點', title: '金閣寺', time: '09:00', note: '早鳥避人潮、金碧輝煌' },
-                        { type: '美食', title: '鳥岩樓', time: '12:00', note: '京都最強親子丼' },
-                        { type: '景點', title: '錦市場', time: '14:30', note: '京都人的廚房、散步美食' }
+                        { time: '早上', type: '景點', title: '金閣寺參觀 (避開人潮)' },
+                        { time: '午餐', type: '美食', title: '鳥岩樓 (親子丼)' },
+                        { time: '下午', type: '景點', title: '錦市場周邊散步、購物' },
+                        { time: '下午', type: '美食', title: 'ASTARTE COFFEE' },
+                        { time: '晚餐', type: '美食', title: 'MORITAYA (壽喜燒)' }
                     ]},
                     { day: 7, events: [
-                        { type: '美食', title: 'DRAGON BURGER', time: '12:00', note: '東福寺名物漢堡' },
-                        { type: '景點', title: '伏見稻荷大社', time: '14:00', note: '千本鳥居、回程關西機場' },
-                        { type: '航班', title: '關西機場 (KIX)', time: '20:00 起飛', note: '搭機返台' }
+                        { time: '早上', type: '景點', title: '東福寺參觀' },
+                        { time: '早上', type: '購物', title: '河原町周邊最後逛街' },
+                        { time: '午餐', type: '美食', title: 'DRAGON BURGER (東福寺店)' },
+                        { time: '下午', type: '景點', title: '伏見稻荷大社 (走千本鳥居)' },
+                        { time: '下午', type: '交通', title: '15:30 京都站出發 → KIX' },
+                        { time: '晚上', type: '航班', title: '20:00 關西機場起飛返台' }
                     ]}
                 ]);
-                const hotels = [
-                    { name: 'Osaka Hotel', address: '大阪市中央區難波...' }, 
-                    { name: 'Kyoto Kawaramachi Inn', address: '京都市下京區河原町...' }
-                ];
-                const shopping = [
-                    { name: 'MOMOTARO JEANS', img: 'https://images.unsplash.com/photo-1542272604-787c3835535d?q=80&w=400' },
-                    { name: 'Blue Bottle Coffee', img: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?q=80&w=400' }
-                ];
-                const expenses = [{ name: 'JR Pass 7D', amt: 50000 }, { name: 'Dinner', amt: 6000 }];
 
-                const calcTwd = () => { twd.value = Math.round(jpy.value * 0.215); };
-                const openMap = (q) => { 
-                    const url = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(q);
-                    window.open(url, '_blank'); 
+                const expenseList = ref([
+                    { name: 'JR Pass 7D', amt: 50000, category: '交通', pay: '信用卡' },
+                    { name: '第一晚燒肉', amt: 6500, category: '美食', pay: '現金' }
+                ]);
+
+                const shopping = ref([
+                    { name: 'TIGHTBOOTH Hoodie', img: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=400' },
+                    { name: '藍瓶咖啡豆', img: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?q=80&w=400' }
+                ]);
+
+                const totalExpenses = computed(() => expenseList.value.reduce((sum, item) => sum + item.amt, 0));
+
+                const newExp = ref({ name: '', amt: null, category: '美食', pay: '現金' });
+
+                const addExpense = () => {
+                    if (newExp.value.name && newExp.value.amt) {
+                        expenseList.value.unshift({ ...newExp.value });
+                        newExp.value = { name: '', amt: null, category: '美食', pay: '現金' };
+                        showExpenseModal.value = false;
+                        nextTick(() => lucide.createIcons());
+                    }
                 };
 
-                onMounted(() => { 
-                    lucide.createIcons(); 
-                    console.log("App Started Successfully!");
-                });
+                const calcTwd = () => { twd.value = Math.round(jpy.value * 0.215); };
+                const goMap = (q) => { window.open("https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(q), "_blank"); };
+                
+                const getExpenseIcon = (cat) => {
+                    const icons = { '美食': 'utensils', '交通': 'train', '購物': 'shopping-bag', '住宿': 'home', '景點': 'camera' };
+                    return icons[cat] || 'tag';
+                };
 
-                watch(activeTab, () => { 
-                    nextTick(() => lucide.createIcons()); 
-                });
+                onMounted(() => { lucide.createIcons(); });
+                watch(activeTab, () => { nextTick(() => lucide.createIcons()); });
 
-                return { activeTab, selectedDay, days, itinerary, hotels, shopping, expenses, jpy, twd, calcTwd, openMap };
+                return { activeTab, selectedDay, days, itinerary, expenseList, totalExpenses, showExpenseModal, newExp, addExpense, shopping, jpy, twd, calcTwd, goMap, getExpenseIcon };
             }
         }).mount('#app');
     </script>
