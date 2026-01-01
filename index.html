@@ -55,6 +55,7 @@
                                     <i data-lucide="plane-takeoff" class="w-4 h-4 text-orange-400"></i>
                                     <span class="text-[10px] font-bold tracking-widest uppercase opacity-60 text-orange-400">{{ event.airline }} {{ event.flightNo }}</span>
                                 </div>
+                                <span v-if="event.terminal" class="text-[9px] bg-white/20 px-2 py-0.5 rounded uppercase tracking-tighter">Terminal {{ event.terminal }}</span>
                             </div>
                             <div class="flex justify-between items-center mt-6 relative z-10">
                                 <div class="text-center"><h4 class="text-2xl font-bold">{{ event.depCity }}</h4><p class="text-[10px] opacity-50">{{ event.depTime }}</p></div>
@@ -75,6 +76,11 @@
                                 </div>
                                 <h3 class="font-bold text-gray-800 text-base leading-tight">{{ event.title }}</h3>
                                 <p class="text-[11px] text-gray-400 mt-2 leading-relaxed" v-html="event.desc"></p>
+                                <div v-if="event.rules" class="mt-2 space-y-1">
+                                    <p v-for="rule in event.rules" class="text-[9px] text-red-400 flex items-center">
+                                        <i data-lucide="alert-triangle" class="w-3 h-3 mr-1"></i> {{ rule }}
+                                    </p>
+                                </div>
                                 <div v-if="event.note" class="mt-3 p-2 bg-gray-50 rounded-lg border-l-2 border-orange-200">
                                     <p class="text-[10px] text-gray-500 italic">💡 {{ event.note }}</p>
                                 </div>
@@ -91,7 +97,6 @@
                 <div class="bg-gray-900 rounded-3xl p-8 text-white mb-8 shadow-2xl">
                     <p class="text-[10px] opacity-50 uppercase font-bold tracking-widest">旅遊總支出 (JPY)</p>
                     <h2 class="text-4xl font-bold mt-2 tracking-tight">¥ {{ totalExpenses.toLocaleString() }}</h2>
-                    <p class="text-[11px] mt-2 opacity-40 italic">約合 NT$ {{ Math.round(totalExpenses * 0.215).toLocaleString() }}</p>
                 </div>
                 <div class="space-y-4">
                     <div v-for="(exp, eIdx) in expenseList" :key="eIdx" class="flex justify-between items-center p-4 border-b border-gray-50 hover:bg-gray-50 rounded-xl transition-all">
@@ -102,54 +107,48 @@
                         <p class="font-bold text-gray-800">¥{{ exp.amt.toLocaleString() }}</p>
                     </div>
                 </div>
-                <button @click="showModal = true" class="fixed bottom-10 right-8 w-14 h-14 osaka-accent text-white rounded-full shadow-2xl flex items-center justify-center z-50 active:scale-90 transition-transform"><i data-lucide="plus" class="w-8 h-8"></i></button>
+                <button @click="showModal = true" class="fixed bottom-10 right-8 w-14 h-14 osaka-accent text-white rounded-full shadow-2xl flex items-center justify-center z-50"><i data-lucide="plus" class="w-8 h-8"></i></button>
             </div>
 
             <div v-if="activeTab === 'info'" class="space-y-6 animate-in fade-in">
                 <section class="bg-white p-5 rounded-3xl border border-gray-100 card-shadow">
                     <h3 class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4 flex items-center"><i data-lucide="link-2" class="w-4 h-4 mr-2"></i>交通查詢中心</h3>
-                    <div class="grid grid-cols-1 gap-3">
+                    <div class="grid grid-cols-1 gap-3 text-sm">
                         <a href="https://www.westjr.co.jp/global/tc/timetable/" target="_blank" class="p-4 bg-orange-50 rounded-2xl flex justify-between items-center group">
-                            <div class="flex flex-col"><span class="text-sm font-bold text-orange-700">JR 西日本時刻表</span><span class="text-[9px] text-orange-400 uppercase">Shinkansen / Express</span></div>
+                            <span class="font-bold text-orange-700">JR 西日本時刻表</span>
                             <i data-lucide="chevron-right" class="w-4 h-4 text-orange-300"></i>
                         </a>
                         <a href="https://miyamanavi.com/transit/bus" target="_blank" class="p-4 bg-blue-50 rounded-2xl flex justify-between items-center">
-                            <div class="flex flex-col"><span class="text-sm font-bold text-blue-700">南丹市營巴士時刻表</span><span class="text-[9px] text-blue-400 uppercase">Miyama Bus</span></div>
+                            <span class="font-bold text-blue-700">美山線巴士時刻表</span>
                             <i data-lucide="chevron-right" class="w-4 h-4 text-blue-300"></i>
                         </a>
                     </div>
                 </section>
                 <div class="bg-gray-50 rounded-3xl p-6 border border-gray-200">
-                    <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">即時匯率換算</h3>
+                    <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">即時匯率換算 (1 JPY = 0.215 NTD)</h3>
                     <div class="flex items-center space-x-4">
-                        <input type="number" v-model="jpy" @input="calcTwd" class="w-1/2 bg-white p-4 rounded-xl font-bold outline-none text-orange-600 shadow-sm text-orange-600">
-                        <span class="font-bold text-gray-300">-></span>
-                        <div class="w-1/2 p-4 bg-white rounded-xl font-bold text-gray-700 text-center shadow-sm">NT$ {{ twd }}</div>
+                        <input type="number" v-model="jpy" @input="calcTwd" class="w-1/2 bg-white p-4 rounded-xl font-bold outline-none text-orange-600">
+                        <div class="w-1/2 p-4 bg-white rounded-xl font-bold text-gray-700 text-center">NT$ {{ twd }}</div>
                     </div>
                 </div>
-            </div>
-
-            <div v-if="activeTab === 'shopping'" class="text-center py-20 text-gray-400">
-                <i data-lucide="shopping-basket" class="w-12 h-12 mx-auto opacity-20 mb-4 text-gray-400"></i>
-                <h3 class="font-bold text-gray-400">購物清單準備中</h3>
             </div>
         </main>
 
         <div v-if="showModal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 modal-overlay">
             <div class="bg-white rounded-[2rem] w-full p-8 shadow-2xl">
                 <h2 class="text-xl font-bold mb-6 osaka-text">新增花費</h2>
-                <div class="space-y-4">
-                    <input v-model="newExp.name" type="text" placeholder="名稱" class="w-full bg-gray-50 p-4 rounded-xl focus:outline-none text-sm">
+                <div class="space-y-4 text-sm">
+                    <input v-model="newExp.name" type="text" placeholder="名稱" class="w-full bg-gray-50 p-4 rounded-xl focus:outline-none">
                     <div class="flex space-x-3">
-                        <input v-model.number="newExp.amt" type="number" placeholder="金額 (JPY)" class="w-1/2 bg-gray-50 p-4 rounded-xl focus:outline-none text-sm">
-                        <select v-model="newExp.category" class="w-1/2 bg-gray-50 p-4 rounded-xl focus:outline-none text-sm">
+                        <input v-model.number="newExp.amt" type="number" placeholder="金額 (JPY)" class="w-1/2 bg-gray-50 p-4 rounded-xl focus:outline-none">
+                        <select v-model="newExp.category" class="w-1/2 bg-gray-50 p-4 rounded-xl focus:outline-none">
                             <option>美食</option><option>交通</option><option>購物</option><option>門票</option>
                         </select>
                     </div>
                 </div>
-                <div class="mt-8 flex space-x-3">
-                    <button @click="showModal = false" class="flex-1 p-4 rounded-xl bg-gray-100 font-bold text-sm">取消</button>
-                    <button @click="addExp" class="flex-1 p-4 rounded-xl osaka-accent text-white font-bold text-sm">儲存</button>
+                <div class="mt-8 flex space-x-3 text-sm">
+                    <button @click="showModal = false" class="flex-1 p-4 rounded-xl bg-gray-100 font-bold">取消</button>
+                    <button @click="addExp" class="flex-1 p-4 rounded-xl osaka-accent text-white font-bold">儲存</button>
                 </div>
             </div>
         </div>
@@ -172,10 +171,10 @@
 
                 const itinerary = ref([
                     { day: 0, events: [
-                        { type: '航班', airline: '長榮航空 (EVA)', flightNo: 'BR178', depCity: 'TPE', depTime: '06:30', arrCity: 'KIX', arrTime: '09:55', duration: '2h 25m' },
-                        { type: '住宿', time: '下午', title: '市區飯店寄放行李', desc: '抵達關西機場後先前往飯店放置重物。' },
+                        { type: '航班', airline: '長榮航空 (EVA)', flightNo: 'BR178', depCity: 'TPE', depTime: '06:30', arrCity: 'KIX', arrTime: '09:55', duration: '2h 25m', terminal: '2' },
+                        { type: '住宿', time: '下午', title: '市區飯店寄放行李', desc: '抵達關西機場 T1 後前往飯店放置重物。' },
                         { type: '景點', time: '下午', title: '勝尾寺參拜', desc: '以「勝利達摩」聞名的能量點。', note: '參拜散策約 1.5–2 小時。' },
-                        { type: '美食', time: '晚餐', title: 'ABURIYA 燒肉', desc: '道頓堀高品質國產牛吃到飽。', note: '第一天調整時差用。' }
+                        { type: '美食', time: '晚餐', title: 'ABURIYA 燒肉', desc: '道頓堀高品質國產牛吃到飽。' }
                     ]},
                     { day: 1, events: [
                         { type: '美食', time: '早上', title: '木津市場', desc: '大阪人的廚房，新鮮刺身。' },
@@ -186,13 +185,11 @@
                     ]},
                     { day: 2, events: [
                         { type: '交通', time: '早上', title: '新大阪 → 姬路 (新幹線)', 
-                          desc: '● 08:34 新大阪 -> 09:03 姬路 (Sakura 547)<br>● 08:48 新大阪 -> 09:18 姬路 (Hikari 591)', 
+                          desc: '● 08:34 新大阪 -> 09:03 姬路<br>● 08:48 新大阪 -> 09:18 姬路', 
                           link: 'https://www.westjr.co.jp/global/tc/timetable/', 
                           note: 'JR PASS 第 1 天啟用。' },
-                        { type: '景點', time: '上午', title: '姬路城參觀', desc: '日本首座世界文化遺產，白鷺城。', note: '含天守參觀約 2–3 小時。' },
-                        { type: '交通', time: '下午', title: '姬路 → 岡山 (新幹線)', 
-                          desc: '● 13:30 姬路 -> 13:50 岡山 (Kodama 851)<br>● 13:51 姬路 -> 14:11 岡山 (Sakura 557)',
-                          link: 'https://www.westjr.co.jp/global/tc/timetable/' },
+                        { type: '景點', time: '上午', title: '姬路城參觀', desc: '日本首座世界文化遺產，白鷺城。' },
+                        { type: '交通', time: '下午', title: '姬路 → 岡山 (新幹線)', link: 'https://www.westjr.co.jp/global/tc/timetable/' },
                         { type: '購物', time: '下午', title: '岡山 AEON 夢樂城', desc: '西日本規模最大購物中心。' }
                     ]},
                     { day: 3, events: [
@@ -208,25 +205,26 @@
                         { type: '美食', time: '晚餐', title: '麵屋 豬一', desc: '清甜高湯系拉麵名店。' }
                     ]},
                     { day: 5, events: [
-                        { type: '交通', time: '早上', title: '京都 → 園部 (JR) → 美山 (巴士)', 
-                          desc: '● 10:08 京都(快速) -> 10:44 園部站<br>● 10:46 園部(JR) -> 10:54 日吉站<br>● 11:10 日吉站(巴士) -> 11:56 美山北', 
-                          link: 'https://miyamanavi.com/transit/bus', 
-                          note: '週三平日去程時刻表。' },
-                        { type: '景點', time: '下午', title: '美山茅草屋之里散策', desc: '保存完好的傳統茅葺建築。' },
-                        { type: '景點', time: '晚上', title: '美山冬燈廊點燈', desc: '17:00 點燈。體驗雪地燈火美景。', 
-                          note: '※回程末班巴士：18:22 美山北 -> 19:13 日吉站。' }
+                        { type: '交通', time: '早上', title: '京都 → 園部 → 日吉 → 美山', 
+                          desc: '● 10:08 京都 -> 10:44 園部<br>● 11:10 日吉站(巴士) -> 11:56 美山北', 
+                          link: 'https://miyamanavi.com/transit/bus' },
+                        { type: '景點', time: '下午', title: '美山雪燈廊 (Yukitouro)', 
+                          desc: '欣賞知井八幡神社神樂舞與慶典活動。',
+                          rules: ['禁止使用空拍機 (No Drones)', '注意路邊開放式水溝 (Watch for gutters)', '尊重居民隱私 (Respect residents)'],
+                          note: '慶典包含路邊美食攤位、搗年糕與限量紅豆湯。' },
+                        { type: '交通', time: '晚上', title: '回程末班巴士', desc: '※18:22 美山北 -> 日吉站。' }
                     ]},
                     { day: 6, events: [
-                        { type: '景點', time: '早上', title: '金閣寺參觀', desc: '金色舍利殿。', note: '建議 09:00 入內避開人潮。' },
+                        { type: '景點', time: '早上', title: '金閣寺參觀', desc: '金色舍利殿。', note: '建議 09:00 入內。' },
                         { type: '美食', time: '午餐', title: '鳥岩樓', desc: '京都最強親子丼。' },
-                        { type: '景點', time: '下午', title: '錦市場、河原町周邊', desc: '散步購物一次滿足。' },
+                        { type: '景點', time: '下午', title: '錦市場、河原町周邊', desc: '散步購物。' },
                         { type: '美食', time: '晚餐', title: 'MORITAYA (壽喜燒)', desc: '京都老字號和牛。' }
                     ]},
                     { day: 7, events: [
                         { type: '景點', time: '早上', title: '東福寺參觀', desc: '著名庭園聖地。' },
                         { type: '美食', time: '午餐', title: 'DRAGON BURGER', desc: '京都風味漢堡。' },
                         { type: '景點', time: '午後', title: '伏見稻荷大社', desc: '千本鳥居。' },
-                        { type: '航班', airline: '全亞航 (AirAsia X)', flightNo: 'D7379', depCity: 'KIX', depTime: '20:45', arrCity: 'TPE', arrTime: '23:05', duration: '3h 20m' }
+                        { type: '航班', airline: '全亞航 (AirAsia X)', flightNo: 'D7379', depCity: 'KIX', depTime: '20:45', arrCity: 'TPE', arrTime: '23:05', duration: '3h 20m', terminal: '1' }
                     ]}
                 ]);
 
@@ -259,3 +257,4 @@
     </script>
 </body>
 </html>
+
