@@ -154,16 +154,11 @@
                 <div class="bg-gray-50 rounded-3xl p-6 border border-gray-200">
                     <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">即時匯率換算</h3>
                     <div class="flex items-center space-x-4">
-                        <input type="number" v-model="jpy" @input="calcTwd" class="w-1/2 bg-white p-4 rounded-xl font-bold outline-none text-orange-600 shadow-sm text-orange-600">
+                        <input type="number" v-model="jpy" @input="calcTwd" class="w-1/2 bg-white p-4 rounded-xl font-bold outline-none text-orange-600 shadow-sm">
                         <span class="font-bold text-gray-300">-></span>
                         <div class="w-1/2 p-4 bg-white rounded-xl font-bold text-gray-700 text-center shadow-sm">NT$ {{ twd }}</div>
                     </div>
                 </div>
-            </div>
-
-            <div v-if="activeTab === 'shopping'" class="text-center py-20 text-gray-400">
-                <i data-lucide="shopping-basket" class="w-12 h-12 mx-auto opacity-20 mb-4 text-gray-400"></i>
-                <h3 class="font-bold text-gray-400">購物清單準備中</h3>
             </div>
         </main>
 
@@ -241,11 +236,11 @@
                     ]},
                     { day: 5, events: [
                         { type: '交通', time: '早上', title: '京都 → 園部 (JR) → 美山 (巴士)', 
-                          desc: '平日建議班次：<br>● 13:08 京都 -> 13:44 園部 (JR 快速)<br>● 14:10 日吉站 -> 14:46 美山北 (巴士)', 
+                          desc: '平日建議班次：<br>● 10:08 京都 -> 10:44 園部 (JR 快速) <br>● 11:10 日吉站 -> 11:56 美山北 (巴士) ', 
                           link: 'https://www.westjr.co.jp/global/tc/timetable/' },
                         { type: '景點', time: '下午', title: '美山茅草屋之里散策', desc: '保存完好的傳統茅葺建築。' },
                         { type: '景點', time: '晚上', title: '美山冬燈廊點燈', desc: '17:00 點燈。體驗雪地燈火美景。', 
-                          note: '※ 平日回程末班巴士 18:22 從「北」發車往日吉站，請務必準時。' }
+                          note: '※ 平日回程末班巴士 18:22 從「北」發車往日吉站 。' }
                     ]},
                     { day: 6, events: [
                         { type: '景點', time: '早上', title: '金閣寺參觀', desc: '金色舍利殿。', note: '建議 09:00 入內避開人潮。' },
